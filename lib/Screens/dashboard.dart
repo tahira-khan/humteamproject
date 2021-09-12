@@ -78,7 +78,7 @@ class _MyDashBoardState extends State<MyDashBoard> {
             ),
 
             UserAccountsDrawerHeader(
-              accountName: Text("Aqib Nawaz"),
+              accountName: Text("Aqib Nawaz.."),
               accountEmail: Text("aqibnawaz015@gmail.com"),
               currentAccountPicture: CircleAvatar(
                 backgroundImage: AssetImage('images/aqib.jpg'),
