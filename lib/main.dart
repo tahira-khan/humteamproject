@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:humteamaptech/Screens/myhome.dart';
+
 import 'package:humteamaptech/Screens/sleash_sxreen.dart';
 
 void main() {
