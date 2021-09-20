@@ -1,8 +1,13 @@
+import 'package:fingerprint_auth_example/Screens/changepassword.dart';
+import 'package:fingerprint_auth_example/Screens/check_in_button.dart';
+import 'package:fingerprint_auth_example/Screens/leaves.dart';
+import 'package:fingerprint_auth_example/Screens/main/main_screen.dart';
+import 'package:fingerprint_auth_example/Screens/main/showleave.dart';
+import 'package:fingerprint_auth_example/Screens/my_profile.dart';
+import 'package:fingerprint_auth_example/Screens/myhome.dart';
+import 'package:fingerprint_auth_example/Screens/notification.dart';
 import 'package:flutter/material.dart';
-import 'package:humteamaptech/Screens/check_in_button.dart';
-import 'package:humteamaptech/Screens/leaves.dart';
-import 'package:humteamaptech/Screens/my_profile.dart';
-import 'package:humteamaptech/Screens/notification.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MyDashBoard extends StatefulWidget {
   @override
@@ -10,17 +15,27 @@ class MyDashBoard extends StatefulWidget {
 }
 
 class _MyDashBoardState extends State<MyDashBoard> {
-  double width = 0, height = 0;
-  List imgs = [
-    'https://images.unsplash.com/photo-1444076784383-69ff7bae1b0a?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80',
-    'https://images.unsplash.com/photo-1474983797926-3939622ca489?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80',
-    'https://images.unsplash.com/photo-1581337377333-904020186445?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80'
-  ];
+  var fullname, uemail, uimg;
+  static SharedPreferences _sharedPreferences;
+
+  getuser() async {
+    _sharedPreferences = await SharedPreferences.getInstance();
+
+    setState(() {
+      fullname = _sharedPreferences.getString('fullname');
+      uemail = _sharedPreferences.getString('uemail');
+      uimg = _sharedPreferences.getString('uimg');
+    });
+  }
+
+  @override
+  void initState() {
+    getuser();
+  }
+  //dynamic x() => getuser();
 
   @override
   Widget build(BuildContext context) {
-    width = MediaQuery.of(context).size.width;
-    height = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
         flexibleSpace: Container(
@@ -40,12 +55,17 @@ class _MyDashBoardState extends State<MyDashBoard> {
               PopupMenuItem(
                   child: Column(
                 children: <Widget>[
-                  OutlinedButton(
+                  RaisedButton(
                     onPressed: () {},
-                    child: Text('Sittings'),
+                    child: Text('Settings'),
                   ),
-                  OutlinedButton(
-                    onPressed: () {},
+                  RaisedButton(
+                    onPressed: () {
+                      Route route = MaterialPageRoute(
+                        builder: (_) => MyHome(),
+                      );
+                      Navigator.push(context, route);
+                    },
                     child: Text('Logout'),
                   ),
                 ],
@@ -76,14 +96,17 @@ class _MyDashBoardState extends State<MyDashBoard> {
                 ),
               ),
             ),
-
             UserAccountsDrawerHeader(
-              accountName: Text("Aqib Nawaz.."),
-              accountEmail: Text("aqibnawaz015@gmail.com"),
-              currentAccountPicture: CircleAvatar(
-                backgroundImage: AssetImage('images/aqib.jpg'),
-              ),
-            ),
+                accountName: Text('$fullname'),
+                accountEmail: Text("$uemail"),
+                currentAccountPicture: CircleAvatar(
+                    backgroundImage: NetworkImage(
+                        'https://humteam.com////Uploads////Images////Employee////ef0f3427-3531-4b2c-81f1-39347734a686.jpg',
+                        scale: 1.0)
+                    // NetworkImage(
+                    //     'https://humteam.com/ploads/Images/Employee/ef0f3427-3531-4b2c-81f1-39347734a686.jpg',
+                    //     scale: 1.0)
+                    )),
             ListTile(
               leading: Icon(Icons.home),
               title: Text("Home"),
@@ -103,7 +126,7 @@ class _MyDashBoardState extends State<MyDashBoard> {
             ),
             ListTile(
               leading: Icon(Icons.calendar_today_rounded),
-              title: Text("Leaves"),
+              title: Text("Add Leaves"),
               onTap: () {
                 Route route = MaterialPageRoute(
                   builder: (_) => Leaves(),
@@ -111,7 +134,16 @@ class _MyDashBoardState extends State<MyDashBoard> {
                 Navigator.push(context, route);
               },
             ),
-
+            ListTile(
+              leading: Icon(Icons.calendar_today_rounded),
+              title: Text("Total Leaves"),
+              onTap: () {
+                Route route = MaterialPageRoute(
+                  builder: (_) => Showleave(),
+                );
+                Navigator.push(context, route);
+              },
+            ),
             ListTile(
               leading: Icon(Icons.notifications_active),
               title: Text("Notification"),
@@ -122,7 +154,6 @@ class _MyDashBoardState extends State<MyDashBoard> {
                 Navigator.push(context, route);
               },
             ),
-
             ListTile(
               leading: Icon(Icons.smart_button_rounded),
               title: Text("Check in button"),
@@ -133,117 +164,33 @@ class _MyDashBoardState extends State<MyDashBoard> {
                 Navigator.push(context, route);
               },
             ),
-
-            // ListTile(
-            //   leading: Icon(Icons.mode_edit), title: Text("My Posts"),
-            //   onTap: () {
-            //   },
-            // ),
-            //
-            // ListTile(
-            //   leading: Icon(Icons.mode_edit), title: Text("Forms"),
-            //   onTap: () {
-            //   },
-            // ),
-            //
-            // ListTile(
-            //   leading: Icon(Icons.mode_edit), title: Text("Form Approvels"),
-            //   onTap: () {
-            //   },
-            // ),
-            //
             ListTile(
               leading: Icon(Icons.lock_outline),
               title: Text("Change Password"),
-              onTap: () {},
+              onTap: () {
+                Route route = MaterialPageRoute(
+                  builder: (_) => ChangePassword(),
+                );
+                Navigator.push(context, route);
+              },
             ),
-
             Divider(
-              color: Colors.orange,
+              color: Colors.black,
             ),
-
             ListTile(
               leading: Icon(Icons.logout),
               title: Text("LogOut"),
-              onTap: () {},
+              onTap: () {
+                Route route = MaterialPageRoute(
+                  builder: (_) => MyHome(),
+                );
+                Navigator.push(context, route);
+              },
             ),
           ],
         ),
       ),
-      body: Container(
-        width: width,
-        margin: EdgeInsets.only(
-            left: width * 0.02, right: width * 0.02, top: width * 0.02),
-        child: ListView.builder(
-            itemCount: imgs.length,
-            itemBuilder: (context, index) {
-              return Card(
-                elevation: 5,
-                child: Column(
-                  children: [
-                    Container(
-                      // width: width,
-                      child: Row(
-                        children: [
-                          Container(
-                            margin: EdgeInsets.only(
-                                left: width * 0.01, top: width * 0.03),
-                            child: CircleAvatar(
-                              radius: width * 0.06,
-                              backgroundImage: NetworkImage('${imgs[index]}'),
-                            ),
-                          ),
-                          SizedBox(width: width * 0.01),
-                          Container(
-                            margin: EdgeInsets.only(top: width * 0.02),
-                            width: width * 0.7,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  child: Text(
-                                    'Simon Jenson (Manager Recruitment and Team Management - MD Office)',
-                                  ),
-                                ),
-                                Container(
-                                    margin: EdgeInsets.only(top: width * 0.01),
-                                    child: Text('${DateTime.now()}  ')),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(top: width * 0.03),
-                      child: Text(
-                        'Title HAPPY DEFENCE DAY ',
-                        style: TextStyle(
-                            fontSize: width * 0.05,
-                            fontWeight: FontWeight.w900),
-                      ),
-                    ),
-                    ClipRRect(
-                      child: Image.network('${imgs[index]}'),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(
-                          top: width * 0.03,
-                          left: width * 0.03,
-                          right: width * 0.03,
-                          bottom: width * 0.03),
-                      child: Text(
-                        'Computer programming is the process of designing and building an executable computer program to accomplish a specific computing result or to perform a specific task. Programming involves tasks such as: analysis, generating algorithms, profiling algorithms accuracy and resource consumption, and the implementation of algorithms in a chosen programming language (commonly referred to as coding) The source code of a program is written in one or more languages that are intelligible to programmers, rather than machine code, which is directly executed by the central processing unit. The purpose of programming is to find a sequence of instructions that will automate the performance of a task (which can be as complex as an operating system) on a computer, often for solving a given problem. Proficient programming thus often requires expertise in several different subjects, including knowledge of the application domain, specialized algorithms, and formal logic. ',
-                        style: TextStyle(
-                          fontSize: width * 0.04,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            }),
-      ),
+      body: MainScreen(),
     );
   }
 }
