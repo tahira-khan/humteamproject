@@ -14,24 +14,26 @@ class _MyHomeState extends State<MyHome> {
   double width = 0, height = 0;
   TextEditingController id = TextEditingController();
   TextEditingController pass = TextEditingController();
-
+  static SharedPreferences _sharedPreferences;
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
 
   loginpage() async {
-    SharedPreferences _sharedPreferences =
-        await SharedPreferences.getInstance();
     var res = await http.get(Uri.parse(
         'https://guessitquiz.000webhostapp.com/userlogin.php?uname=' +
             id.text +
             '&pass=' +
             pass.text));
-
     var result = res.body;
     var data = json.decode(res.body);
     print(result);
     if (result != null) {
       String uname = data[0]['fullname'];
+      String email = data[0]['uemail'];
+      String uimg = data[0]['uimg'];
+      _sharedPreferences = await SharedPreferences.getInstance();
       _sharedPreferences.setString('fullname', uname);
+      _sharedPreferences.setString('uemail', email);
+      _sharedPreferences.setString('uimg', uimg);
       print(uname);
       Route route = MaterialPageRoute(
         builder: (_) => MyDashBoard(),
